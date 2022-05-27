@@ -10,10 +10,7 @@ describe("page", () => {
   let pendingXHR: PendingXHR;
 
   beforeAll(async () => {
-    browser = await puppeteer.launch({
-      defaultViewport: null,
-      args: ["--window-size=1920,1920"],
-    });
+    browser = await puppeteer.launch();
   });
   beforeEach(async () => {
     page = await browser.newPage();
