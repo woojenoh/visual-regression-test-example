@@ -54,6 +54,6 @@ jobs:
         if: failure() && steps.upload_to_s3.outcome == 'success'
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: |
-          [DIFF_URL](${{ steps.upload_to_s3.outputs.DIFF_URL }}) :wave:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          issue-number: ${{ github.event.number }}
+          body: |
+            [DIFF_URL](${{ steps.upload_to_s3.outputs.DIFF_URL }}) :wave:
