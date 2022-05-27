@@ -35,21 +35,21 @@ jobs:
 
       - name: Check diff file
         id: check_diff_file
-        if: steps.copy_from_s3.outcome == 'success'
+        if: failure() && steps.copy_from_s3.outcome == 'success'
         uses: andstor/file-existence-action@v1
         with:
           files: "./__tests__/__diff_output__/*.png"
 
       - name: Upload to S3
         id: upload_to_s3
-        if: steps.check_diff_file.outcome == 'success' && steps.check_diff_file.outputs.files_exists == 'true'
+        if: failure() && steps.check_diff_file.outputs.files_exists == 'true'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: aws s3 sync ./__tests__/__diff_output__ s3://vrt-bucket/__diff_output__
 
       - name: Comment PR
-        if: steps.upload_to_s3.outcome == 'success'
+        if: failure() && steps.upload_to_s3.outcome == 'success'
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
