@@ -34,7 +34,7 @@ jobs:
 
       - name: Check diff file
         id: check_diff_file
-        use: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v1
         with:
           files: "./__tests__/__diff_output__/*.png"
 
