@@ -54,6 +54,7 @@ jobs:
         if: failure() && steps.upload_to_s3.outcome == 'success'
         uses: peter-evans/create-or-update-comment@v2
         with:
+          issue-number: 1
           body: |
             (DIFF_URL)[${{ steps.upload_to_s3.outputs.DIFF_URL }}] :wave:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
