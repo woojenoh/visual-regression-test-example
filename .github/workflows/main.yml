@@ -56,4 +56,4 @@ jobs:
         with:
           issue-number: ${{ github.event.number }}
           body: |
-            [DIFF_URL](${{ steps.upload_to_s3.outputs.DIFF_URL }}) :wave:
+            ![DIFF_URL](${{ steps.upload_to_s3.outputs.DIFF_URL }})
