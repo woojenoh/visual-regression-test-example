@@ -23,5 +23,11 @@ jobs:
       - name: Start
         run: npm start & npx wait-on http://localhost:3000
 
+      - name: Copy from S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: aws s3 cp s3://vrt-bucket/__image_snapshots__ ./__tests__/__image_snapshots__
+
       - name: Test
         run: npm test

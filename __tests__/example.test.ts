@@ -28,6 +28,8 @@ describe("page", () => {
     await pendingXHR.waitForAllXhrFinished();
     await page.waitForTimeout(1000);
     const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
+    expect(image).toMatchImageSnapshot({
+      customDiffDir: './__tests__/__diff_output__'
+    });
   });
 });
