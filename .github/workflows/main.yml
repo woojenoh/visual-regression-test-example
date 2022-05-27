@@ -2,7 +2,7 @@ name: React Start
 on: pull_request
 
 jobs:
-  build:
+  start:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout source code.
@@ -22,3 +22,6 @@ jobs:
 
       - name: Start
         run: npm start & npx wait-on http://localhost:3000
+
+      - name: Test
+        run: npm test
