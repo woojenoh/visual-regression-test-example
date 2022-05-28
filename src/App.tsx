@@ -10,7 +10,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn Visual Regression Test
+          Learn Visual Regression Test!
         </a>
       </header>
     </div>
