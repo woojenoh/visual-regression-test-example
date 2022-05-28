@@ -78,6 +78,6 @@ jobs:
         with:
           issue-number: ${{ github.event.number }}
           body: |
-            Visual Regression Test Success
+            Visual Regression Test Failed
 
             ![DIFF_URL](${{ steps.make_presigned_url.outputs.DIFF_URL }})
