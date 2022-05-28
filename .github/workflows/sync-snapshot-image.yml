@@ -2,7 +2,7 @@ name: Sync Snapshot Image
 on:
   push:
     branches:
-      - 'master'
+      - "master"
 
 jobs:
   main:
