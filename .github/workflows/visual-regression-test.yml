@@ -2,7 +2,7 @@ name: Visual Regression Test
 on: pull_request
 
 jobs:
-  comment:
+  main:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout source code
@@ -33,6 +33,14 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Comment PR on Success
+        if: success()
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.number }}
+          body: |
+            Visual Regression Test Success
+
       - name: Check diff file
         id: check_diff_file
         if: failure() && steps.copy_from_s3.outcome == 'success'
@@ -47,18 +55,17 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 sync ./__tests__/__image_snapshots__ s3://vrt-bucket/__image_snapshots__
           aws s3 sync ./__tests__/__diff_output__ s3://vrt-bucket/__diff_output__
 
       - name: Make presigned url
         id: make_presigned_url
-        if: failure() && steps.upload_to_s3.outputs.files_exists == 'true'
+        if: failure() && steps.upload_to_s3.outcome == 'success'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: echo '::set-output name=DIFF_URL::$(aws s3 presign --region ap-northeast-2 s3://vrt-bucket/__diff_output__/example-test-ts-page-match-1-diff.png)'
 
-      - name: Comment PR
+      - name: Comment PR on Failure
         if: failure() && steps.make_presigned_url.outcome == 'success'
         uses: peter-evans/create-or-update-comment@v2
         with:
