@@ -1,0 +1,39 @@
+name: Sync Snapshot Image
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  comment:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@master
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles("**/package-lock.json") }}
+          restore-keys: |
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start
+        run: npm start & npx wait-on http://localhost:3000
+
+      - name: Test
+        run: npm test -- --updateSnapshot
+
+      - name: Upload to S3
+        id: upload_to_s3
+        if: success()
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 sync ./__tests__/__image_snapshots__ s3://vrt-bucket/__image_snapshots__
