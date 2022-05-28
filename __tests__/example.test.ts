@@ -10,10 +10,7 @@ describe("page", () => {
   let pendingXHR: PendingXHR;
 
   beforeAll(async () => {
-    browser = await puppeteer.launch({
-      defaultViewport: null,
-      args: ["--window-size=1920,1920"],
-    });
+    browser = await puppeteer.launch();
   });
   beforeEach(async () => {
     page = await browser.newPage();
@@ -31,6 +28,8 @@ describe("page", () => {
     await pendingXHR.waitForAllXhrFinished();
     await page.waitForTimeout(1000);
     const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
+    expect(image).toMatchImageSnapshot({
+      customDiffDir: './__tests__/__diff_output__'
+    });
   });
 });
