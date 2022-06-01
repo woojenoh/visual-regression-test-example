@@ -9,14 +9,14 @@ function App() {
   return (
     <>
       <div>
-        <Link to={PATH.HOME}>Home</Link>
+        <Link to={PATH.HOME}>Home - Younha</Link>
         {" | "}
-        <Link to={PATH.ABOUT}>About</Link>
+        <Link to={PATH.ABOUT}>About Time</Link>
       </div>
       <Routes>
         <Route
           path={PATH.HOME}
-          element={<span>Learn Visual Regression Test</span>}
+          element={<span>Learn React!</span>}
         />
         <Route
           path={PATH.ABOUT}
@@ -27,7 +27,7 @@ function App() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              About Me
+              About You
             </a>
           }
         />
