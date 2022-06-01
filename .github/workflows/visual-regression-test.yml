@@ -63,8 +63,12 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          chmod +x ./scripts/get-diff-urls.sh
-          ./scripts/get-diff-urls.sh
+          diff_urls=""
+          for path in $(aws s3 ls s3://vrt-bucket/__diff_output__/ | awk '{print $4}' | grep diff)
+          do
+            diff_urls+="![DIFF_URL]("https://vrt-bucket.s3.ap-northeast-2.amazonaws.com/__diff_output__/$path")"
+          done
+          echo "::set-output name=DIFF_URLS::$(diff_urls)"
 
       - name: Comment PR on Failure
         if: failure() && steps.get_diff_urls.outputs.DIFF_URLS != ''
