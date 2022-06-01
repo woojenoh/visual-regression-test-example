@@ -68,7 +68,8 @@ jobs:
           do
             diff_urls+="![DIFF_URL]("https://vrt-bucket.s3.ap-northeast-2.amazonaws.com/__diff_output__/$path")"
           done
-          echo "::set-output name=DIFF_URLS::$(diff_urls)"
+          echo $diff_urls
+          echo "::set-output name=DIFF_URLS::$diff_urls"
 
       - name: Comment PR on Failure
         if: failure() && steps.get_diff_urls.outputs.DIFF_URLS != ''
