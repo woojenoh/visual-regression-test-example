@@ -66,16 +66,17 @@ jobs:
           diff_urls=""
           for path in $(aws s3 ls s3://vrt-bucket/__diff_output__/ | awk '{print $4}' | grep diff)
           do
-            diff_urls+="![DIFF_URL]("https://vrt-bucket.s3.ap-northeast-2.amazonaws.com/__diff_output__/$path")"
+            diff_path="/${d%-*}\n"
+            diff_url="![diff_url]("https://vrt-bucket.s3.ap-northeast-2.amazonaws.com/__diff_output__/$path")\n"
+            diff_urls+=$diff_path$diff_url
           done
-          echo $diff_urls
-          echo "::set-output name=DIFF_URLS::$diff_urls"
+          echo "::set-output name=diff_urls::$diff_urls"
 
       - name: Comment PR on Failure
-        if: failure() && steps.get_diff_urls.outputs.DIFF_URLS != ''
+        if: failure() && steps.get_diff_urls.outputs.diff_urls != ''
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ github.event.number }}
           body: |
             Visual Regression Test Failed
-            ${{ steps.get_diff_urls.outputs.DIFF_URLS }}
+            ${{ steps.get_diff_urls.outputs.diff_urls }}
