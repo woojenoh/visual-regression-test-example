@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Generate date env
-        run: echo date=$(date +'%Y-%m-%d-%H-%i-%s') >> $GITHUB_ENV
+        run: echo date=$(date '+%Y-%m-%d %H:%M:%S') >> $GITHUB_ENV
 
       - name: Checkout source code
         uses: actions/checkout@master
