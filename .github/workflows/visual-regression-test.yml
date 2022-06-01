@@ -5,6 +5,9 @@ jobs:
   main:
     runs-on: ubuntu-18.04
     steps:
+      - name: Generate date env
+        run: echo date=$(date +'%Y-%m-%d') >> $GITHUB_ENV
+
       - name: Checkout source code
         uses: actions/checkout@master
 
@@ -40,20 +43,13 @@ jobs:
           issue-number: ${{ github.event.number }}
           body: Visual Regression Test Success
 
-      - name: Check diff file
-        id: check_diff_file
-        if: failure() && steps.copy_from_s3.outcome == 'success'
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "./__tests__/__diff_output__/*.png"
-
       - name: Upload to S3
         id: upload_to_s3
-        if: failure() && steps.check_diff_file.outputs.files_exists == 'true'
+        if: failure()
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: aws s3 sync ./__tests__/__diff_output__ s3://vrt-bucket/__diff_output__
+        run: aws s3 sync ./__tests__/__diff_output__ s3://vrt-bucket/__diff_output__/${{ env.date }}
 
       - name: Get diff urls
         id: get_diff_urls
@@ -63,10 +59,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           diff_urls=""
-          for path in $(aws s3 ls s3://vrt-bucket/__diff_output__/ | awk '{print $4}' | grep diff)
+          for path in $(aws s3 ls s3://vrt-bucket/__diff_output__/${{ env.date }}/ | awk '{print $4}' | grep diff)
           do
             diff_path="/${path%-*}"
-            diff_url="![diff_url]("https://vrt-bucket.s3.ap-northeast-2.amazonaws.com/__diff_output__/$path")"
+            diff_url="![diff_url]("https://vrt-bucket.s3.ap-northeast-2.amazonaws.com/__diff_output__/${{ env.date }}/$path")"
             diff_urls+=$diff_path$diff_url
           done
           echo "::set-output name=diff_urls::$diff_urls"
