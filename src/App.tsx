@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route
           path={PATH.HOME}
-          element={<span>Learn Visual Regression Test</span>}
+          element={<span>Learn React!</span>}
         />
         <Route
           path={PATH.ABOUT}
