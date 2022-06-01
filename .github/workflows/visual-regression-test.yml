@@ -66,8 +66,8 @@ jobs:
           diff_urls=""
           for path in $(aws s3 ls s3://vrt-bucket/__diff_output__/ | awk '{print $4}' | grep diff)
           do
-            diff_path="/${d%-*}\n"
-            diff_url="![diff_url]("https://vrt-bucket.s3.ap-northeast-2.amazonaws.com/__diff_output__/$path")\n"
+            diff_path="/${path%-*}"
+            diff_url="![diff_url]("https://vrt-bucket.s3.ap-northeast-2.amazonaws.com/__diff_output__/$path")"
             diff_urls+=$diff_path$diff_url
           done
           echo "::set-output name=diff_urls::$diff_urls"
