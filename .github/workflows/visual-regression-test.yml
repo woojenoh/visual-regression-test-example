@@ -62,6 +62,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        shell: bash
         run: |
           DIFF_URLS=""
           for d in $(aws s3 ls s3://vrt-bucket/__diff_output__/ | awk '{print $4}' | grep diff)
