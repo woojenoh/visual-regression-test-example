@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <div>
-        <Link to={PATH.HOME}>Away</Link>
+        <Link to={PATH.HOME}>Home</Link>
         {" | "}
         <Link to={PATH.ABOUT}>About</Link>
       </div>
@@ -27,7 +27,7 @@ function App() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              About Time
+              About Me
             </a>
           }
         />
